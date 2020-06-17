@@ -10,19 +10,22 @@ locService.getLocs()
 
 window.onload = () => {
     if (window.location.search.length !== 0) {
-        // console.log(window.location.search);
         var paramsString = window.location.search;
         var searchParams = new URLSearchParams(paramsString);
-        console.log('searchParams:', searchParams);
-
-        // const url = `https://kobtze.github.io/travelT/?lat=${}&lng=${}`
-        // var paramsString = `?lat=3.14&lng=1.63`;
-        // var searchParams = new URLSearchParams(window.location.search);
-
-        // //Iterate the search parameters.
-        // for (let p of searchParams) {
-        //     console.log(p);
-        // }
+        var latlng = []
+        for (let p of searchParams) {
+            latlng.push(...p)
+        }
+        var latlngObj = { lat: +latlng[1], lng: +latlng[3] }
+        mapService.initMap(latlngObj.lat, latlngObj.lng)
+            .then(() => {
+                mapService.addMarker(latlngObj);
+                geoCodeService.getGeoCode(latlngObj.lat, latlngObj.lng)
+                    .then(res => {
+                        document.querySelector('.user-loc').innerText = res.results[4].formatted_address
+                    })
+            })
+            .catch(console.log('INIT MAP ERROR'));
 
     } else {
         locService.getPosition()
@@ -61,12 +64,9 @@ document.querySelector('.share-loc').addEventListener('click', ev => {
             console.log('got position', pos.coords.latitude, pos.coords.longitude);
             var urlToClip = `https://kobtze.github.io/travelT/?lat=${pos.coords.latitude}&lng=${pos.coords.longitude}`;
             console.log(urlToClip);
-
             var promise = navigator.clipboard.writeText(urlToClip)
                 .then(res => alert('Location copied to clipboard successfully!'))
 
-
-            // console.log(window.location.);
         })
         .catch(err => console.log('ERROR:', err));
 
