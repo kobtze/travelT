@@ -19,7 +19,7 @@ window.onload = () => {
         .catch(err => {
             mapService.initMap(35.6895, 139.6917)
             console.log('err!!!', err);
-        })
+        })       
 }
 
 document.querySelector('.btn').addEventListener('click', (ev) => {
@@ -33,3 +33,5 @@ document.querySelector('.btn').addEventListener('click', (ev) => {
     })
     .catch(err => console.log(err, 'Could not retrieve location!'));
 })
+
+document.querySelector('.user-loc').innerText = 'babba'
