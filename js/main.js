@@ -24,5 +24,12 @@ window.onload = () => {
 
 document.querySelector('.btn').addEventListener('click', (ev) => {
     console.log('Aha!', ev.target);
-    mapService.panTo(35.6895, 139.6917);
+    locService.getPosition()
+    .then(pos => {
+        mapService.panTo(pos.coords.latitude, pos.coords.longitude)
+            .then(() => {
+                mapService.addMarker({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+            })
+    })
+    .catch(err => console.log(err, 'Could not retrieve location!'));
 })
